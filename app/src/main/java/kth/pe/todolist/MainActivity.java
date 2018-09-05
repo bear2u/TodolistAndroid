@@ -1,30 +1,24 @@
 package kth.pe.todolist;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import kth.pe.todolist.db.dao.ItemDatabase;
 import kth.pe.todolist.db.entity.Items;
-import kth.pe.todolist.domain.ItemDTO;
-
-import static android.arch.persistence.room.Room.databaseBuilder;
 
 public class MainActivity extends AppCompatActivity {
 

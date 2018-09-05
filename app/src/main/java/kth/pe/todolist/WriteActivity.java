@@ -3,20 +3,12 @@ package kth.pe.todolist;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import kth.pe.todolist.db.dao.ItemDao;
-import kth.pe.todolist.db.dao.ItemDatabase;
 import kth.pe.todolist.db.entity.Items;
-import kth.pe.todolist.domain.ItemDTO;
-
-import static android.arch.persistence.room.Room.databaseBuilder;
 
 public class WriteActivity extends AppCompatActivity {
 //    private ItemDatabase itemDatabase;
