@@ -46,5 +46,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
+    public void setItems(List<Items> items) {
+        this.mDataset = items;
+        notifyDataSetChanged();
+    }
+
 
 }

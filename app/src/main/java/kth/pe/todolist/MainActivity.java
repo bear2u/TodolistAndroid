@@ -1,7 +1,11 @@
 package kth.pe.todolist;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,18 +22,21 @@ import java.util.List;
 
 import kth.pe.todolist.db.dao.ItemDatabase;
 import kth.pe.todolist.db.entity.Items;
+import kth.pe.todolist.domain.ItemDTO;
 
 import static android.arch.persistence.room.Room.databaseBuilder;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ItemDatabase itemDatabase;
+//    private ItemDatabase itemDatabase;
     public static final String DATABASE_NAME = "todolist_db";
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
+    private MyAdapter mAdapter;
 
     private List<Items> items = new ArrayList<>();
+
+    private MainViewModel mMainViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,34 +55,54 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new MyAdapter(items);
         mRecyclerView.setAdapter(mAdapter);
 
-        initDB();
+        mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
+//        initDB();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, WriteActivity.class));
+                startActivityForResult(new Intent(MainActivity.this, WriteActivity.class), 1);
             }
         });
 
-        fetchAllItems();
-    }
+//        fetchAllItems();
 
-    private void initDB() {
-        itemDatabase = databaseBuilder(getApplicationContext(), ItemDatabase.class, MainActivity.DATABASE_NAME).fallbackToDestructiveMigration().build();
-    }
-
-    private void fetchAllItems() {
-        new Thread(new Runnable() {
+        mMainViewModel.getAllItems().observe(this, new Observer<List<Items>>() {
             @Override
-            public void run() {
-                List<Items> list = itemDatabase.daoAccess().fetchAllItems();
-                Log.d("KTH", "size : " + list.size());
-                items.clear();
-                items.addAll(list);
+            public void onChanged(@Nullable List<Items> items) {
+                Log.d("KTH", "observe detected : " + items);
+                mAdapter.setItems(items);
             }
-        }).start();
+        });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1 && resultCode == RESULT_OK) {
+            Items item = data.getParcelableExtra("item");
+            mMainViewModel.insert(item);
+        }
+    }
+
+    //    private void initDB() {
+//        itemDatabase = databaseBuilder(getApplicationContext(), ItemDatabase.class, MainActivity.DATABASE_NAME).fallbackToDestructiveMigration().build();
+//    }
+//
+//    private void fetchAllItems() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                List<Items> list = itemDatabase.daoAccess().fetchAllItems();
+//                Log.d("KTH", "size : " + list.size());
+//                items.clear();
+//                items.addAll(list);
+//            }
+//        }).start();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,21 +1,27 @@
 package kth.pe.todolist;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import kth.pe.todolist.db.dao.ItemDao;
 import kth.pe.todolist.db.dao.ItemDatabase;
 import kth.pe.todolist.db.entity.Items;
+import kth.pe.todolist.domain.ItemDTO;
 
 import static android.arch.persistence.room.Room.databaseBuilder;
 
 public class WriteActivity extends AppCompatActivity {
-    private ItemDatabase itemDatabase;
+//    private ItemDatabase itemDatabase;
     private EditText titleView, contentView;
+    private MainViewModel mMainViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,42 +31,77 @@ public class WriteActivity extends AppCompatActivity {
         titleView = findViewById(R.id.etTitle);
         contentView = findViewById(R.id.etContent);
 
-        initDB();
+        mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
         setTitle("Write Todo");
 
         findViewById(R.id.btnSubmit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addItem();
+
+                final String title = titleView.getText().toString();
+                final String content = contentView.getText().toString();
+
+                if(TextUtils.isEmpty(title) || TextUtils.isEmpty(content)) {
+                    return;
+                }
+
+                Intent intent = new Intent();
+                final Items items = new Items();
+                items.setTitle(title);
+                items.setContent(content);
+
+                intent.putExtra("item", items);
+
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }
 
-    private void initDB() {
-        itemDatabase = databaseBuilder(getApplicationContext(), ItemDatabase.class, MainActivity.DATABASE_NAME).fallbackToDestructiveMigration().build();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
+        finish();
     }
+
+    //
+//    private void initDB() {
+//        itemDatabase = databaseBuilder(getApplicationContext(), ItemDatabase.class, MainActivity.DATABASE_NAME).fallbackToDestructiveMigration().build();
+//    }
 
     private void addItem() {
         final String title = titleView.getText().toString();
         final String content = contentView.getText().toString();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Items items = new Items();
-                items.setTitle(title);
-                items.setContent(content);
-                itemDatabase.daoAccess().insertOnlySingleItem(items);
-                new Handler(getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(WriteActivity.this, "insert done", Toast.LENGTH_SHORT).show();
-                        titleView.setText("");
-                        contentView.setText("");
-                    }
-                });
-            }
-        }).start();
+        if(TextUtils.isEmpty(title) || TextUtils.isEmpty(content)) {
+            return;
+        }
+
+        final Items items = new Items();
+        items.setTitle(title);
+        items.setContent(content);
+        mMainViewModel.insert(items);
+        finish();
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+////                itemDatabase.daoAccess().insertOnlySingleItem(items);
+////                new Handler(getMainLooper()).post(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        Toast.makeText(WriteActivity.this, "insert done", Toast.LENGTH_SHORT).show();
+////                        titleView.setText("");
+////                        contentView.setText("");
+////                    }
+////                });
+//            }
+//        }).start();
     }
 
 

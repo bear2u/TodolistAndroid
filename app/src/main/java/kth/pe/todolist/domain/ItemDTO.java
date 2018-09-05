@@ -1,22 +1,19 @@
-package kth.pe.todolist.db.entity;
+package kth.pe.todolist.domain;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-@Entity
-public class Items implements Parcelable {
-    @PrimaryKey(autoGenerate = true)
+public class ItemDTO implements Parcelable {
     private Long id;
     private String title;
     private String content;
 
-    public Items() {
-
+    public ItemDTO(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 
-    protected Items(Parcel in) {
+    protected ItemDTO(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
         } else {
@@ -26,15 +23,15 @@ public class Items implements Parcelable {
         content = in.readString();
     }
 
-    public static final Creator<Items> CREATOR = new Creator<Items>() {
+    public static final Creator<ItemDTO> CREATOR = new Creator<ItemDTO>() {
         @Override
-        public Items createFromParcel(Parcel in) {
-            return new Items(in);
+        public ItemDTO createFromParcel(Parcel in) {
+            return new ItemDTO(in);
         }
 
         @Override
-        public Items[] newArray(int size) {
-            return new Items[size];
+        public ItemDTO[] newArray(int size) {
+            return new ItemDTO[size];
         }
     };
 
