@@ -11,7 +11,6 @@ import android.widget.EditText;
 import kth.pe.todolist.db.entity.Items;
 
 public class WriteActivity extends AppCompatActivity {
-//    private ItemDatabase itemDatabase;
     private EditText titleView, contentView;
     private MainViewModel mMainViewModel;
 
@@ -59,43 +58,5 @@ public class WriteActivity extends AppCompatActivity {
         setResult(RESULT_CANCELED, intent);
         finish();
     }
-
-    //
-//    private void initDB() {
-//        itemDatabase = databaseBuilder(getApplicationContext(), ItemDatabase.class, MainActivity.DATABASE_NAME).fallbackToDestructiveMigration().build();
-//    }
-
-    private void addItem() {
-        final String title = titleView.getText().toString();
-        final String content = contentView.getText().toString();
-
-        if(TextUtils.isEmpty(title) || TextUtils.isEmpty(content)) {
-            return;
-        }
-
-        final Items items = new Items();
-        items.setTitle(title);
-        items.setContent(content);
-        mMainViewModel.insert(items);
-        finish();
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-////                itemDatabase.daoAccess().insertOnlySingleItem(items);
-////                new Handler(getMainLooper()).post(new Runnable() {
-////                    @Override
-////                    public void run() {
-////                        Toast.makeText(WriteActivity.this, "insert done", Toast.LENGTH_SHORT).show();
-////                        titleView.setText("");
-////                        contentView.setText("");
-////                    }
-////                });
-//            }
-//        }).start();
-    }
-
-
 
 }

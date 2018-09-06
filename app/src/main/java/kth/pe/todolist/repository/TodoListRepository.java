@@ -20,7 +20,7 @@ public class TodoListRepository {
     public TodoListRepository(Application application) {
         ItemDatabase itemDatabase = databaseBuilder(application, ItemDatabase.class, MainActivity.DATABASE_NAME).fallbackToDestructiveMigration().build();
         itemDao = itemDatabase.daoAccess();
-        mAllItems = itemDao.fetchAllItems2();
+        mAllItems = itemDao.fetchAllItems();
     }
 
     public LiveData<List<Items>> getAllItems() {

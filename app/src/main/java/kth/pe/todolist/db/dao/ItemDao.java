@@ -13,9 +13,7 @@ import kth.pe.todolist.db.entity.Items;
 public interface ItemDao {
     @Insert
     void insertOnlySingleItem(Items items);
-    @Query("select * from items order by id desc")
-    List<Items> fetchAllItems();
 
     @Query("select * from items order by id desc")
-    LiveData<List<Items>> fetchAllItems2();
+    LiveData<List<Items>> fetchAllItems();
 }

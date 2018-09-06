@@ -22,7 +22,6 @@ import kth.pe.todolist.db.entity.Items;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private ItemDatabase itemDatabase;
     public static final String DATABASE_NAME = "todolist_db";
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -51,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
-//        initDB();
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(MainActivity.this, WriteActivity.class), 1);
             }
         });
-
-//        fetchAllItems();
 
         mMainViewModel.getAllItems().observe(this, new Observer<List<Items>>() {
             @Override
@@ -81,23 +76,6 @@ public class MainActivity extends AppCompatActivity {
             mMainViewModel.insert(item);
         }
     }
-
-    //    private void initDB() {
-//        itemDatabase = databaseBuilder(getApplicationContext(), ItemDatabase.class, MainActivity.DATABASE_NAME).fallbackToDestructiveMigration().build();
-//    }
-//
-//    private void fetchAllItems() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                List<Items> list = itemDatabase.daoAccess().fetchAllItems();
-//                Log.d("KTH", "size : " + list.size());
-//                items.clear();
-//                items.addAll(list);
-//            }
-//        }).start();
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
